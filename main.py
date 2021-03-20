@@ -1,7 +1,7 @@
 import pygame
 
 from colors import *
-from objects import Frog
+from objects import Frog, Obstacle, Direction
 
 
 pygame.init()
@@ -12,10 +12,14 @@ FPS = 60
 
 frog = Frog(SURFACE, 320, 480, 32, 32, 32)
 
+cars = []
+car = Obstacle(SURFACE, 600, 100, 32, 32, 1, direction=Direction.DOWN)
+
 
 def draw_window():
     SURFACE.fill(BLACK)
     frog.draw()
+    car.draw()
     pygame.display.update()
 
 
@@ -29,6 +33,7 @@ while running:
 
     keys = pygame.key.get_pressed()
     frog.control(keys)
+    car.on_loop()
 
     draw_window()
 

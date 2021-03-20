@@ -1,5 +1,6 @@
 import pygame
 
+from colors import *
 from enum import Enum
 
 
@@ -36,7 +37,7 @@ class Frog(GameObject):
         self._jump_delay = 0
 
     def draw(self):
-        pygame.draw.rect(self.surface, (128, 128, 128), pygame.Rect(self.x, self.y, self.width, self.height))
+        pygame.draw.rect(self.surface, GREEN, pygame.Rect(self.x, self.y, self.width, self.height))
 
     def control(self, keys):
         direction = self._get_move_direction(keys)
@@ -86,3 +87,34 @@ class Frog(GameObject):
 
     def _bottom_border(self):
         return self.y + self.velocity + self.width > self.surface.get_height()
+
+
+class Obstacle(GameObject):
+    def __init__(self, *args, direction=Direction.LEFT, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.to_remove = False
+        self.direction = direction
+
+    def on_loop(self):
+        self.move(self.direction)
+        self.check_to_remove()
+
+    def draw(self):
+        pygame.draw.rect(self.surface, RED, pygame.Rect(self.x, self.y, self.width, self.height))
+
+    def check_to_remove(self):
+        if (self._right_border() or self._left_border() or
+                self._top_border() or self._bottom_border()):
+            self.to_remove = True
+
+    def _right_border(self):
+        return self.x > self.surface.get_width()
+
+    def _left_border(self):
+        return self.x + self.width < 0
+
+    def _top_border(self):
+        return self.y + self.height < 0
+
+    def _bottom_border(self):
+        return self.y > self.surface.get_height()

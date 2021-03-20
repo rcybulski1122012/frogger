@@ -10,7 +10,7 @@ pygame.display.set_caption("Frogger Game")
 SURFACE = pygame.display.set_mode((640, 640))
 FPS = 60
 
-frog = Frog(SURFACE, 320, 550, 25, 25, 25)
+frog = Frog(SURFACE, 320, 480, 32, 32, 32)
 
 
 def draw_window():

@@ -61,3 +61,28 @@ class Frog(GameObject):
 
         return None
 
+    def move(self, direction):
+        if not self._is_beyond_the_border_after_move(direction):
+            super().move(direction)
+
+    def _is_beyond_the_border_after_move(self, direction):
+        if direction == Direction.LEFT:
+            return self._left_border()
+        elif direction == Direction.RIGHT:
+            return self._right_border()
+        elif direction == Direction.UP:
+            return self._top_border()
+        elif direction == Direction.DOWN:
+            return self._bottom_border()
+
+    def _right_border(self):
+        return self.x + self.width + self.velocity > self.surface.get_width()
+
+    def _left_border(self):
+        return self.x - self.velocity < 0
+
+    def _top_border(self):
+        return self.y - self.velocity < 0
+
+    def _bottom_border(self):
+        return self.y + self.velocity + self.width > self.surface.get_height()

@@ -3,7 +3,7 @@ import os.path
 import pygame
 
 from colors import *
-from objects import Frog, Obstacle
+from objects import Frog, Obstacle, Direction
 
 
 pygame.init()
@@ -15,15 +15,28 @@ FPS = 60
 
 frog = Frog(SURFACE, 320, 576, 32, 32, 32)
 
-cars = []
-car = Obstacle(SURFACE, 615, 490, 150, 50, 2)
+cars = [
+    Obstacle(SURFACE, 640, 490, 75, 50, 2),
+    Obstacle(SURFACE, 1100, 490, 75, 50, 2),
+    Obstacle(SURFACE, 1450, 490, 75, 50, 2),
+
+
+    Obstacle(SURFACE, -150, 426, 150, 50, 2, direction=Direction.RIGHT),
+    Obstacle(SURFACE, -500, 426, 150, 50, 2, direction=Direction.RIGHT),
+    Obstacle(SURFACE, -1000, 426, 150, 50, 2, direction=Direction.RIGHT),
+
+    Obstacle(SURFACE, 640, 362, 150, 50, 2),
+    Obstacle(SURFACE, 1100, 362, 150, 50, 2),
+    Obstacle(SURFACE, 1450, 362, 150, 50, 2),
+]
 
 
 def draw_window():
     SURFACE.fill(BLACK)
     SURFACE.blit(BACKGROUND, (0, 0))
     frog.draw()
-    car.draw()
+    for car in cars:
+        car.draw()
     pygame.display.update()
 
 
@@ -37,7 +50,18 @@ while running:
 
     keys = pygame.key.get_pressed()
     frog.control(keys)
-    car.on_loop()
+
+    # cars actions: collisions, moving to default position then beyond the screen
+    for car in cars:
+        car.on_loop()
+        if car.beyond_the_screen:
+            car.set_position(car.starting_x, car.starting_y)
+            car.beyond_the_screen = False
+
+        if frog.check_collision(car):
+            frog.set_position(320, 576)
+
+    draw_window()
 
 
 pygame.quit()

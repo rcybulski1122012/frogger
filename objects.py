@@ -14,6 +14,8 @@ class Direction(Enum):
 class GameObject:
     def __init__(self, surface, x, y, width, height, velocity):
         self.surface = surface
+        self.starting_x = x
+        self.starting_y = y
         self.x = x
         self.y = y
         self.width = width
@@ -29,6 +31,9 @@ class GameObject:
             self.y -= self.velocity
         elif direction == Direction.DOWN:
             self.y += self.velocity
+
+    def set_position(self, x, y):
+        self.x, self.y = x, y
 
     @property
     def rect(self):
@@ -99,20 +104,20 @@ class Frog(GameObject):
 class Obstacle(GameObject):
     def __init__(self, *args, direction=Direction.LEFT, **kwargs):
         super().__init__(*args, **kwargs)
-        self.to_remove = False
+        self.beyond_the_screen = False
         self.direction = direction
 
     def on_loop(self):
         self.move(self.direction)
-        self.check_to_remove()
+        self.check_beyond_the_screen()
 
     def draw(self):
         pygame.draw.rect(self.surface, RED, self.rect)
 
-    def check_to_remove(self):
+    def check_beyond_the_screen(self):
         if (self._right_border() or self._left_border() or
                 self._top_border() or self._bottom_border()):
-            self.to_remove = True
+            self.beyond_the_screen = True
 
     def _right_border(self):
         return self.x > self.surface.get_width()

@@ -14,6 +14,7 @@ SURFACE = pygame.display.set_mode((640, 640))
 FPS = 60
 
 frog = Frog(SURFACE, 320, 576, 32, 32, 32)
+water_area = Obstacle(SURFACE, 0, 97, 640, 191, 0)
 
 cars = [
     Obstacle(SURFACE, 640, 490, 75, 50, 2),
@@ -30,13 +31,28 @@ cars = [
     Obstacle(SURFACE, 1450, 362, 150, 50, 2),
 ]
 
+logs = [
+    Obstacle(SURFACE, 640, 98, 300, 32, 2),
+    Obstacle(SURFACE, 640, 131, 300, 32, 2),
+    Obstacle(SURFACE, 640, 164, 300, 32, 2),
+    Obstacle(SURFACE, 640, 197, 300, 32, 2),
+    Obstacle(SURFACE, 640, 230, 300, 31, 2),
+    Obstacle(SURFACE, 640, 262, 300, 25, 2),
+]
+
 
 def draw_window():
     SURFACE.fill(BLACK)
     SURFACE.blit(BACKGROUND, (0, 0))
-    frog.draw()
+
+    # water_area.draw()
     for car in cars:
         car.draw()
+
+    for log in logs:
+        log.draw()
+
+    frog.draw()
     pygame.display.update()
 
 
@@ -59,7 +75,16 @@ while running:
             car.beyond_the_screen = False
 
         if frog.check_collision(car):
-            frog.set_position(320, 576)
+            frog.set_position(frog.starting_x, frog.starting_y)
+
+    for log in logs:
+        log.on_loop()
+        if log.beyond_the_screen:
+            log.set_position(log.starting_x, log.starting_y)
+            log.beyond_the_screen = False
+
+    if frog.check_collision(water_area) and not any([log.check_collision(frog) for log in logs]):
+        frog.set_position(frog.starting_x, frog.starting_y)
 
     draw_window()
 

@@ -1,23 +1,27 @@
+import os.path
+
 import pygame
 
 from colors import *
-from objects import Frog, Obstacle, Direction
+from objects import Frog, Obstacle
 
 
 pygame.init()
 
 pygame.display.set_caption("Frogger Game")
+BACKGROUND = pygame.image.load(os.path.join("assets", "background.png"))
 SURFACE = pygame.display.set_mode((640, 640))
 FPS = 60
 
-frog = Frog(SURFACE, 320, 480, 32, 32, 32)
+frog = Frog(SURFACE, 320, 576, 32, 32, 32)
 
 cars = []
-car = Obstacle(SURFACE, 600, 100, 32, 32, 1, direction=Direction.DOWN)
+car = Obstacle(SURFACE, 615, 490, 150, 50, 2)
 
 
 def draw_window():
     SURFACE.fill(BLACK)
+    SURFACE.blit(BACKGROUND, (0, 0))
     frog.draw()
     car.draw()
     pygame.display.update()
@@ -35,6 +39,5 @@ while running:
     frog.control(keys)
     car.on_loop()
 
-    draw_window()
 
 pygame.quit()

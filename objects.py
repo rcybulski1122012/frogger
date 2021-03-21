@@ -30,6 +30,13 @@ class GameObject:
         elif direction == Direction.DOWN:
             self.y += self.velocity
 
+    @property
+    def rect(self):
+        return pygame.Rect(self.x, self.y, self.width, self.height)
+
+    def check_collision(self, other):
+        return self.rect.colliderect(other.rect)
+
 
 class Frog(GameObject):
     def __init__(self, *args, **kwargs):
@@ -37,7 +44,7 @@ class Frog(GameObject):
         self._jump_delay = 0
 
     def draw(self):
-        pygame.draw.rect(self.surface, GREEN, pygame.Rect(self.x, self.y, self.width, self.height))
+        pygame.draw.rect(self.surface, GREEN, self.rect)
 
     def control(self, keys):
         direction = self._get_move_direction(keys)
@@ -100,7 +107,7 @@ class Obstacle(GameObject):
         self.check_to_remove()
 
     def draw(self):
-        pygame.draw.rect(self.surface, RED, pygame.Rect(self.x, self.y, self.width, self.height))
+        pygame.draw.rect(self.surface, RED, self.rect)
 
     def check_to_remove(self):
         if (self._right_border() or self._left_border() or

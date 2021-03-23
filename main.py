@@ -67,7 +67,6 @@ while running:
     keys = pygame.key.get_pressed()
     frog.control(keys)
 
-    # cars actions: collisions, moving to default position then beyond the screen
     for car in cars:
         car.on_loop()
         if car.beyond_the_screen:

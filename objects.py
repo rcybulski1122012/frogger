@@ -12,7 +12,7 @@ class Direction(Enum):
 
 
 class GameObject:
-    def __init__(self, surface, x, y, width, height, velocity):
+    def __init__(self, surface, x, y, width, height, velocity, sprite):
         self.surface = surface
         self.starting_x = x
         self.starting_y = y
@@ -21,6 +21,7 @@ class GameObject:
         self.width = width
         self.height = height
         self.velocity = velocity
+        self.sprite = sprite
 
     def move(self, direction):
         if direction == Direction.LEFT:
@@ -32,7 +33,13 @@ class GameObject:
         elif direction == Direction.DOWN:
             self.y += self.velocity
 
-    def set_position(self, x, y):
+    def draw(self):
+        self.surface.blit(self.sprite, (self.x, self.y))
+
+    def move_to_starting_position(self):
+        self.move_to_position(self.starting_x, self.starting_y)
+
+    def move_to_position(self, x, y):
         self.x, self.y = x, y
 
     @property
@@ -48,15 +55,12 @@ class Frog(GameObject):
         super().__init__(*args, **kwargs)
         self._jump_delay = 0
 
-    def draw(self):
-        pygame.draw.rect(self.surface, GREEN, self.rect)
-
     def control(self, keys):
         direction = self._get_move_direction(keys)
         if self._jump_delay == 0 and direction:
             self.move(direction)
             self._jump_delay += 1
-        elif self._jump_delay == 20:
+        elif self._jump_delay == 15:
             self._jump_delay = 0
         elif self._jump_delay != 0:
             self._jump_delay += 1
@@ -107,26 +111,16 @@ class Obstacle(GameObject):
         self.beyond_the_screen = False
         self.direction = direction
 
-    def on_loop(self):
-        self.move(self.direction)
-        self.check_beyond_the_screen()
+    def move(self, *args):
+        super().move(self.direction)
 
-    def draw(self):
-        pygame.draw.rect(self.surface, RED, self.rect)
+    def is_beyond_screen(self):
+        if self.direction == Direction.LEFT:
+            if self.x + self.width < 0:
+                return True
+            return False
+        elif self.direction == Direction.RIGHT:
+            if self.x - self.width > self.surface.get_width():
+                return True
+            return False
 
-    def check_beyond_the_screen(self):
-        if (self._right_border() or self._left_border() or
-                self._top_border() or self._bottom_border()):
-            self.beyond_the_screen = True
-
-    def _right_border(self):
-        return self.x > self.surface.get_width()
-
-    def _left_border(self):
-        return self.x + self.width < 0
-
-    def _top_border(self):
-        return self.y + self.height < 0
-
-    def _bottom_border(self):
-        return self.y > self.surface.get_height()

@@ -39,7 +39,7 @@ class Frogger:
             MovingObject(400, 384, 32, 32, 1.2, self.CAR1_IMG),
             MovingObject(600, 384, 32, 32, 1.2, self.CAR1_IMG),
         ]
-        self.water_area = GameObject(0, 161, 640, 192, None, None)
+        self.water_area = GameObject(0, 161, 640, 190, None, None)
         self.blocks = [
             MovingObject(0, 161, 128, 32, 1, self.BLOCK4_IMG, direction=Direction.RIGHT),
             MovingObject(215, 161, 128, 32, 1, self.BLOCK4_IMG, direction=Direction.RIGHT),
@@ -49,9 +49,9 @@ class Frogger:
             MovingObject(0, 225, 192, 32, 1.2, self.BLOCK6_IMG, direction=Direction.RIGHT),
             MovingObject(400, 225, 192, 32, 1.2, self.BLOCK6_IMG, direction=Direction.RIGHT),
 
-            MovingObject(0, 257, 128, 32, 0.8, self.BLOCK3_IMG, direction=Direction.RIGHT),
-            MovingObject(350, 257, 128, 32, 0.8, self.BLOCK3_IMG, direction=Direction.RIGHT),
-            MovingObject(700, 257, 128, 32, 0.8, self.BLOCK3_IMG, direction=Direction.RIGHT),
+            MovingObject(0, 257, 96, 32, 0.8, self.BLOCK3_IMG, direction=Direction.RIGHT),
+            MovingObject(350, 257, 96, 32, 0.8, self.BLOCK3_IMG, direction=Direction.RIGHT),
+            MovingObject(700, 257, 96, 32, 0.8, self.BLOCK3_IMG, direction=Direction.RIGHT),
 
             MovingObject(150, 321, 128, 32, 1, self.BLOCK4_IMG, direction=Direction.RIGHT),
             MovingObject(450, 321, 128, 32, 1, self.BLOCK4_IMG, direction=Direction.RIGHT),

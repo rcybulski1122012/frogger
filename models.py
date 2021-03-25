@@ -71,10 +71,9 @@ class Frog(GameObject):
             return self.y + self.velocity + self.width > surface.get_height()
 
 
-class Obstacle(GameObject):
+class MovingObject(GameObject):
     def __init__(self, *args, direction=Direction.LEFT, **kwargs):
         super().__init__(*args, **kwargs)
-        self.beyond_the_screen = False
         self.direction = direction
 
     def move(self, *args):

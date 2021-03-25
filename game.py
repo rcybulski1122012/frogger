@@ -2,7 +2,7 @@ import os.path
 
 import pygame
 
-from models import Frog, Obstacle, Direction
+from models import Frog, MovingObject, Direction, GameObject
 from utils import get_move_direction, detect_collision
 
 
@@ -15,29 +15,74 @@ class Frogger:
         self.clock = pygame.time.Clock()
         self.frog = Frog(320, 576, 32, 32, 32, self.FROG_IMG)
         self.cars = [
-            Obstacle(150, 544, 32, 32, 1.2, self.CAR1_IMG),
-            Obstacle(350, 544, 32, 32, 1.2, self.CAR1_IMG),
-            Obstacle(550, 544, 32, 32, 1.2, self.CAR1_IMG),
+            MovingObject(150, 544, 32, 32, 1.2, self.CAR1_IMG),
+            MovingObject(350, 544, 32, 32, 1.2, self.CAR1_IMG),
+            MovingObject(550, 544, 32, 32, 1.2, self.CAR1_IMG),
 
-            Obstacle(550, 512, 32, 32, 0.8, self.CAR2_IMG, direction=Direction.RIGHT),
-            Obstacle(350, 512, 32, 32, 0.8, self.CAR2_IMG, direction=Direction.RIGHT),
-            Obstacle(150, 512, 32, 32, 0.8, self.CAR2_IMG, direction=Direction.RIGHT),
+            MovingObject(550, 512, 32, 32, 0.8, self.CAR2_IMG, direction=Direction.RIGHT),
+            MovingObject(350, 512, 32, 32, 0.8, self.CAR2_IMG, direction=Direction.RIGHT),
+            MovingObject(150, 512, 32, 32, 0.8, self.CAR2_IMG, direction=Direction.RIGHT),
 
-            Obstacle(200, 480, 32, 32, 1, self.CAR3_IMG),
-            Obstacle(400, 480, 32, 32, 1, self.CAR3_IMG),
-            Obstacle(600, 480, 32, 32, 1, self.CAR3_IMG),
+            MovingObject(200, 480, 32, 32, 1, self.CAR3_IMG),
+            MovingObject(400, 480, 32, 32, 1, self.CAR3_IMG),
+            MovingObject(600, 480, 32, 32, 1, self.CAR3_IMG),
 
-            Obstacle(450, 448, 32, 32, 0.9, self.CAR4_IMG, direction=Direction.RIGHT),
-            Obstacle(100, 448, 32, 32, 0.9, self.CAR4_IMG, direction=Direction.RIGHT),
+            MovingObject(450, 448, 32, 32, 0.9, self.CAR4_IMG, direction=Direction.RIGHT),
+            MovingObject(100, 448, 32, 32, 0.9, self.CAR4_IMG, direction=Direction.RIGHT),
 
-            Obstacle(100, 416, 64, 32, 0.7, self.CAR5_IMG),
-            Obstacle(250, 416, 64, 32, 0.7, self.CAR5_IMG),
-            Obstacle(450, 416, 64, 32, 0.7, self.CAR5_IMG),
-            Obstacle(600, 416, 64, 32, 0.7, self.CAR5_IMG),
+            MovingObject(100, 416, 64, 32, 0.7, self.CAR5_IMG),
+            MovingObject(250, 416, 64, 32, 0.7, self.CAR5_IMG),
+            MovingObject(450, 416, 64, 32, 0.7, self.CAR5_IMG),
+            MovingObject(600, 416, 64, 32, 0.7, self.CAR5_IMG),
 
-            Obstacle(200, 384, 32, 32, 1.2, self.CAR1_IMG),
-            Obstacle(400, 384, 32, 32, 1.2, self.CAR1_IMG),
-            Obstacle(600, 384, 32, 32, 1.2, self.CAR1_IMG),
+            MovingObject(200, 384, 32, 32, 1.2, self.CAR1_IMG),
+            MovingObject(400, 384, 32, 32, 1.2, self.CAR1_IMG),
+            MovingObject(600, 384, 32, 32, 1.2, self.CAR1_IMG),
+        ]
+        self.water_area = GameObject(0, 161, 640, 192, None, None)
+        self.blocks = [
+            MovingObject(0, 161, 128, 32, 1, self.BLOCK4_IMG, direction=Direction.RIGHT),
+            MovingObject(215, 161, 128, 32, 1, self.BLOCK4_IMG, direction=Direction.RIGHT),
+            MovingObject(430, 161, 128, 32, 1, self.BLOCK4_IMG, direction=Direction.RIGHT),
+            MovingObject(655, 161, 128, 32, 1, self.BLOCK4_IMG, direction=Direction.RIGHT),
+
+            MovingObject(0, 225, 192, 32, 1.2, self.BLOCK6_IMG, direction=Direction.RIGHT),
+            MovingObject(400, 225, 192, 32, 1.2, self.BLOCK6_IMG, direction=Direction.RIGHT),
+
+            MovingObject(0, 257, 128, 32, 0.8, self.BLOCK3_IMG, direction=Direction.RIGHT),
+            MovingObject(350, 257, 128, 32, 0.8, self.BLOCK3_IMG, direction=Direction.RIGHT),
+            MovingObject(700, 257, 128, 32, 0.8, self.BLOCK3_IMG, direction=Direction.RIGHT),
+
+            MovingObject(150, 321, 128, 32, 1, self.BLOCK4_IMG, direction=Direction.RIGHT),
+            MovingObject(450, 321, 128, 32, 1, self.BLOCK4_IMG, direction=Direction.RIGHT),
+            MovingObject(700, 321, 128, 32, 1, self.BLOCK4_IMG, direction=Direction.RIGHT),
+        ]
+        self.turtles = [
+
+            MovingObject(0, 193, 32, 32, 1.1, self.TURTLE_IMG),
+            MovingObject(35, 193, 32, 32, 1.1, self.TURTLE_IMG),
+
+            MovingObject(150, 193, 32, 32, 1.1, self.TURTLE_IMG),
+            MovingObject(185, 193, 32, 32, 1.1, self.TURTLE_IMG),
+
+            MovingObject(300, 193, 32, 32, 1.1, self.TURTLE_IMG),
+            MovingObject(335, 193, 32, 32, 1.1, self.TURTLE_IMG),
+
+            MovingObject(450, 193, 32, 32, 1.1, self.TURTLE_IMG),
+            MovingObject(485, 193, 32, 32, 1.1, self.TURTLE_IMG),
+
+
+            MovingObject(215, 289, 32, 32, 0.9, self.TURTLE_IMG),
+            MovingObject(250, 289, 32, 32, 0.9, self.TURTLE_IMG),
+            MovingObject(285, 289, 32, 32, 0.9, self.TURTLE_IMG),
+
+            MovingObject(500, 289, 32, 32, 0.9, self.TURTLE_IMG),
+            MovingObject(535, 289, 32, 32, 0.9, self.TURTLE_IMG),
+            MovingObject(570, 289, 32, 32, 0.9, self.TURTLE_IMG),
+
+            MovingObject(700, 289, 32, 32, 0.9, self.TURTLE_IMG),
+            MovingObject(735, 289, 32, 32, 0.9, self.TURTLE_IMG),
+            MovingObject(770, 289, 32, 32, 0.9, self.TURTLE_IMG),
         ]
 
     @staticmethod
@@ -56,7 +101,7 @@ class Frogger:
         self.BLOCK3_IMG = pygame.image.load(os.path.join("assets", "block3.png"))
         self.BLOCK4_IMG = pygame.image.load(os.path.join("assets", "block4.png"))
         self.BLOCK6_IMG = pygame.image.load(os.path.join("assets", "block6.png"))
-        self.TURTLE = pygame.image.load(os.path.join("assets", "turtle.png"))
+        self.TURTLE_IMG = pygame.image.load(os.path.join("assets", "turtle.png"))
 
     def run(self):
         while True:
@@ -77,22 +122,45 @@ class Frogger:
             self.frog.move(direction)
 
     def _process_game_logic(self):
+        self._process_objects_movement()
+        self._process_frog_with_cars_collisions()
+        self._process_frog_with_blocks_and_turtles_collisions()
+
+    def _process_objects_movement(self):
+        for moving_object in self._get_all_moving_objects():
+            moving_object.move()
+
+            if moving_object.is_beyond_the_surface(self.SURFACE):
+                self._move_obstacle_to_opposite_side(moving_object)
+
+    def _get_all_moving_objects(self):
+        return [*self.cars, *self.blocks, *self.turtles]
+
+    def _move_obstacle_to_opposite_side(self, moving_object):
+        if moving_object.direction == Direction.RIGHT:
+            moving_object.move_to_position(-moving_object.width, moving_object.y)
+        elif moving_object.direction == Direction.LEFT:
+            moving_object.move_to_position(self.SURFACE.get_width(), moving_object.y)
+
+    def _process_frog_with_cars_collisions(self):
         for car in self.cars:
             if detect_collision(self.frog, car):
                 self.frog.move_to_starting_position()
 
-            car.move()
+    def _process_frog_with_blocks_and_turtles_collisions(self):
+        frog_with_blocks_collisions = [detect_collision(self.frog, block) for block in self.blocks]
+        frog_with_turtles_collisions = [detect_collision(self.frog, turtle) for turtle in self.turtles]
+        all_collisions = [*frog_with_blocks_collisions, *frog_with_turtles_collisions]
 
-            if car.is_beyond_the_surface(self.SURFACE):
-                if car.direction == Direction.RIGHT:
-                    car.move_to_position(-car.width, car.y)
-                elif car.direction == Direction.LEFT:
-                    car.move_to_position(self.SURFACE.get_width(), car.y)
+        if detect_collision(self.frog, self.water_area) and not any(all_collisions):
+            self.frog.move_to_starting_position()
 
     def _draw_game_elements(self):
         self.SURFACE.blit(self.BACKGROUND, (0, 0))
-        for car in self.cars:
-            car.draw(self.SURFACE)
+
+        for moving_object in self._get_all_moving_objects():
+            moving_object.draw(self.SURFACE)
+
         self.frog.draw(self.SURFACE)
         pygame.display.update()
 

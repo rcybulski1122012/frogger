@@ -40,6 +40,16 @@ class GameObject:
     def move_to_position(self, x, y):
         self.x, self.y = x, y
 
+    def move_by_value(self, direction, value):
+        if direction == Direction.LEFT:
+            self.x -= value
+        elif direction == Direction.RIGHT:
+            self.x += value
+        elif direction == Direction.UP:
+            self.y -= value
+        elif direction == Direction.DOWN:
+            self.y += value
+
     @property
     def rect(self):
         return pygame.Rect(self.x, self.y, self.width, self.height)

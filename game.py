@@ -5,6 +5,7 @@ import pygame
 from models import Frog, MovingObject, Direction, GameObject
 from utils import get_move_direction, detect_collision
 from timer import Timer
+from best_score import BestScore
 
 
 class Frogger:
@@ -15,6 +16,9 @@ class Frogger:
         self.FPS = 60
         self.clock = pygame.time.Clock()
         self.timer = Timer(25, 25, 200, 25, (255, 0, 0), 30, self.FPS)
+        self.best_score_manager = BestScore('frogger.txt')
+        self.best_score = self.best_score_manager.get()
+        self.font = pygame.font.SysFont('Comic Sans MS', 35)
         self.frog = Frog(320, 576, 32, 32, 32, self.FROG_IMG)
         self.cars = [
             MovingObject(150, 544, 32, 32, 1.2, self.CAR1_IMG),
@@ -170,7 +174,13 @@ class Frogger:
 
         self.timer.draw(self.SURFACE)
         self.frog.draw(self.SURFACE)
+
+        self.SURFACE.blit(self._get_score_surface(), (400, 25))
+
         pygame.display.update()
+
+    def _get_score_surface(self):
+        return self.font.render(f'Best score: {self.best_score}', False, (255, 255, 255))
 
     def _handle_game_ending(self):
         if self.timer.end_of_time():

@@ -2,8 +2,9 @@ import os.path
 
 import pygame
 
-from models import Frog, MovingObject, Direction, GameObject, Timer
+from models import Frog, MovingObject, Direction, GameObject
 from utils import get_move_direction, detect_collision
+from timer import Timer
 
 
 class Frogger:
@@ -110,6 +111,8 @@ class Frogger:
             self._process_game_logic()
             self._draw_game_elements()
 
+            self._handle_game_ending()
+
     def _handle_input(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -168,6 +171,10 @@ class Frogger:
         self.timer.draw(self.SURFACE)
         self.frog.draw(self.SURFACE)
         pygame.display.update()
+
+    def _handle_game_ending(self):
+        if self.timer.end_of_time():
+            pygame.quit()
 
 
 if __name__ == '__main__':

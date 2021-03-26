@@ -2,7 +2,7 @@ import os.path
 
 import pygame
 
-from models import Frog, MovingObject, Direction, GameObject
+from models import Frog, MovingObject, Direction, GameObject, Timer
 from utils import get_move_direction, detect_collision
 
 
@@ -13,6 +13,7 @@ class Frogger:
         self.SURFACE = pygame.display.set_mode((640, 640))
         self.FPS = 60
         self.clock = pygame.time.Clock()
+        self.timer = Timer(25, 25, 200, 25, (255, 0, 0), 30, self.FPS)
         self.frog = Frog(320, 576, 32, 32, 32, self.FROG_IMG)
         self.cars = [
             MovingObject(150, 544, 32, 32, 1.2, self.CAR1_IMG),
@@ -124,6 +125,7 @@ class Frogger:
         self._process_objects_movement()
         self._process_frog_with_cars_collisions()
         self._process_frog_with_blocks_and_turtles_collisions()
+        self.timer.tick()
 
     def _process_objects_movement(self):
         for moving_object in self._get_all_moving_objects():
@@ -163,6 +165,7 @@ class Frogger:
         for moving_object in self._get_all_moving_objects():
             moving_object.draw(self.SURFACE)
 
+        self.timer.draw(self.SURFACE)
         self.frog.draw(self.SURFACE)
         pygame.display.update()
 

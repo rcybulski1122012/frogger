@@ -9,16 +9,20 @@ from best_score import BestScore
 
 
 class Frogger:
-    def __init__(self):
+    def __init__(self, seconds_per_frog=30, lives=3):
         self._init_pygame()
         self._load_images()
+        self.font = pygame.font.SysFont('Comic Sans MS', 35)
         self.SURFACE = pygame.display.set_mode((640, 640))
         self.FPS = 60
         self.clock = pygame.time.Clock()
-        self.timer = Timer(25, 25, 200, 25, (255, 0, 0), 30, self.FPS)
+
         self.best_score_manager = BestScore('frogger.txt')
         self.best_score = self.best_score_manager.get()
-        self.font = pygame.font.SysFont('Comic Sans MS', 35)
+        self.current_score = 0
+        self.lives = lives
+
+        self.timer = Timer(25, 25, 200, 25, (255, 0, 0), seconds_per_frog, self.FPS)
         self.frog = Frog(320, 576, 32, 32, 32, self.FROG_IMG)
         self.cars = [
             MovingObject(150, 544, 32, 32, 1.2, self.CAR1_IMG),
@@ -46,6 +50,15 @@ class Frogger:
             MovingObject(600, 384, 32, 32, 1.2, self.CAR1_IMG),
         ]
         self.water_area = GameObject(0, 161, 640, 190, None, None)
+        self.grass_area = GameObject(0, 97, 640, 62, None, None)
+        self.frog_homes = [
+            GameObject(64, 129, 33, 30, None, None),
+            GameObject(160, 129, 33, 30, None, None),
+            GameObject(254, 129, 33, 30, None, None),
+            GameObject(352, 129, 33, 30, None, None),
+            GameObject(448, 129, 33, 30, None, None),
+            GameObject(544, 129, 33, 30, None, None),
+        ]
         self.blocks = [
             MovingObject(0, 161, 126, 31, 1, self.BLOCK4_IMG, direction=Direction.RIGHT),
             MovingObject(215, 161, 126, 31, 1, self.BLOCK4_IMG, direction=Direction.RIGHT),
@@ -115,8 +128,6 @@ class Frogger:
             self._process_game_logic()
             self._draw_game_elements()
 
-            self._handle_game_ending()
-
     def _handle_input(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -132,59 +143,118 @@ class Frogger:
         self._process_objects_movement()
         self._process_frog_with_cars_collisions()
         self._process_frog_with_blocks_and_turtles_collisions()
+        self._process_frog_homes()
+        self._process_game_conditions()
+        self._handle_end_of_time()
         self.timer.tick()
 
     def _process_objects_movement(self):
-        for moving_object in self._get_all_moving_objects():
-            moving_object.move()
+        for obj in self._get_all_moving_objects():
+            obj.move()
 
-            if moving_object.is_beyond_the_surface(self.SURFACE):
-                self._move_obstacle_to_opposite_side(moving_object)
+            if obj.is_beyond_the_surface(self.SURFACE):
+                self._move_object_to_opposite_side(obj)
 
     def _get_all_moving_objects(self):
         return [*self.cars, *self.blocks, *self.turtles]
 
-    def _move_obstacle_to_opposite_side(self, moving_object):
-        if moving_object.direction == Direction.RIGHT:
-            moving_object.move_to_position(-moving_object.width, moving_object.y)
-        elif moving_object.direction == Direction.LEFT:
-            moving_object.move_to_position(self.SURFACE.get_width(), moving_object.y)
+    def _move_object_to_opposite_side(self, obj):
+        if obj.direction == Direction.RIGHT:
+            obj.move_to_position(-obj.width, obj.y)
+        elif obj.direction == Direction.LEFT:
+            obj.move_to_position(self.SURFACE.get_width(), obj.y)
 
     def _process_frog_with_cars_collisions(self):
         for car in self.cars:
             if detect_collision(self.frog, car):
                 self.frog.move_to_starting_position()
+                self._lose_live()
+
+    def _lose_live(self):
+        self.frog.move_to_starting_position()
+        self.lives -= 1
+        self.timer.reset()
 
     def _process_frog_with_blocks_and_turtles_collisions(self):
         colliding_object = None
-        for moving_object in [*self.blocks, *self.turtles]:
-            if detect_collision(self.frog, moving_object):
-                colliding_object = moving_object
+        for obj in [*self.blocks, *self.turtles]:
+            if detect_collision(self.frog, obj):
+                colliding_object = obj
 
         if detect_collision(self.frog, self.water_area) and colliding_object is None:
-            self.frog.move_to_starting_position()
+            self._lose_live()
         elif colliding_object:
             self.frog.move_by_value(colliding_object.direction, colliding_object.velocity)
+
+    def _process_frog_homes(self):
+        colliding_object = None
+        index = None
+        for i, obj in enumerate(self.frog_homes):
+            if detect_collision(self.frog, obj):
+                colliding_object = obj
+                index = i
+
+        if detect_collision(self.frog, self.grass_area) and colliding_object is None:
+            self._lose_live()
+        elif colliding_object:
+            self.frog_homes.pop(index)
+            self._frog_in_home()
+
+    def _frog_in_home(self):
+        # For safely arriving to the home
+        self.current_score += 100
+        # For unused time
+        self.current_score += int(self.timer.seconds * 2)
+
+        self.frog.move_to_starting_position()
+        self.timer.reset()
+
+    def _process_game_conditions(self):
+        if self.lives < 0:
+            self._end_game()
+        elif len(self.frog_homes) == 0:
+            # For saving all frogs
+            self.current_score += 1000
+            # For preserved lives
+            self.current_score += self.lives * 100
+            self._end_game()
+
+    def _end_game(self):
+        if self.current_score > self.best_score:
+            self.best_score_manager.set(self.current_score)
+
+        pygame.quit()
+
+    def _handle_end_of_time(self):
+        if self.timer.end_of_time():
+            self._lose_live()
 
     def _draw_game_elements(self):
         self.SURFACE.blit(self.BACKGROUND, (0, 0))
 
-        for moving_object in self._get_all_moving_objects():
-            moving_object.draw(self.SURFACE)
+        for obj in self._get_all_moving_objects():
+            obj.draw(self.SURFACE)
 
         self.timer.draw(self.SURFACE)
         self.frog.draw(self.SURFACE)
 
-        self.SURFACE.blit(self._get_score_surface(), (400, 25))
+        self.SURFACE.blit(self._get_best_score_surface(), (400, 25))
+        self.SURFACE.blit(self._get_lives_number_surface(), (400, 60))
+        self.SURFACE.blit(self._get_current_score_surface(), (25, 60))
+
+        for obj in self.frog_homes:
+            pygame.draw.rect(self.SURFACE, (255, 0, 0), obj.rect)
 
         pygame.display.update()
 
-    def _get_score_surface(self):
+    def _get_best_score_surface(self):
         return self.font.render(f'Best score: {self.best_score}', False, (255, 255, 255))
 
-    def _handle_game_ending(self):
-        if self.timer.end_of_time():
-            pygame.quit()
+    def _get_lives_number_surface(self):
+        return self.font.render(f'Lives: {self.lives}', False, (255, 255, 255))
+
+    def _get_current_score_surface(self):
+        return self.font.render(f'Current score: {self.current_score}', False, (255, 255, 255))
 
 
 if __name__ == '__main__':

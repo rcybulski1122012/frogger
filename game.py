@@ -47,21 +47,21 @@ class Frogger:
         ]
         self.water_area = GameObject(0, 161, 640, 190, None, None)
         self.blocks = [
-            MovingObject(0, 161, 128, 31, 1, self.BLOCK4_IMG, direction=Direction.RIGHT),
-            MovingObject(215, 161, 128, 31, 1, self.BLOCK4_IMG, direction=Direction.RIGHT),
-            MovingObject(430, 161, 128, 31, 1, self.BLOCK4_IMG, direction=Direction.RIGHT),
-            MovingObject(655, 161, 128, 31, 1, self.BLOCK4_IMG, direction=Direction.RIGHT),
+            MovingObject(0, 161, 126, 31, 1, self.BLOCK4_IMG, direction=Direction.RIGHT),
+            MovingObject(215, 161, 126, 31, 1, self.BLOCK4_IMG, direction=Direction.RIGHT),
+            MovingObject(430, 161, 126, 31, 1, self.BLOCK4_IMG, direction=Direction.RIGHT),
+            MovingObject(655, 161, 126, 31, 1, self.BLOCK4_IMG, direction=Direction.RIGHT),
 
-            MovingObject(0, 225, 192, 31, 1.2, self.BLOCK6_IMG, direction=Direction.RIGHT),
-            MovingObject(400, 225, 192, 31, 1.2, self.BLOCK6_IMG, direction=Direction.RIGHT),
+            MovingObject(0, 225, 188, 31, 1.2, self.BLOCK6_IMG, direction=Direction.RIGHT),
+            MovingObject(400, 225, 188, 31, 1.2, self.BLOCK6_IMG, direction=Direction.RIGHT),
 
-            MovingObject(0, 257, 96, 31, 0.8, self.BLOCK3_IMG, direction=Direction.RIGHT),
-            MovingObject(350, 257, 96, 31, 0.8, self.BLOCK3_IMG, direction=Direction.RIGHT),
-            MovingObject(700, 257, 96, 31, 0.8, self.BLOCK3_IMG, direction=Direction.RIGHT),
+            MovingObject(0, 257, 92, 31, 0.8, self.BLOCK3_IMG, direction=Direction.RIGHT),
+            MovingObject(350, 257, 92, 31, 0.8, self.BLOCK3_IMG, direction=Direction.RIGHT),
+            MovingObject(600, 257, 92, 31, 0.8, self.BLOCK3_IMG, direction=Direction.RIGHT),
 
-            MovingObject(150, 321, 128, 31, 1, self.BLOCK4_IMG, direction=Direction.RIGHT),
-            MovingObject(450, 321, 128, 31, 1, self.BLOCK4_IMG, direction=Direction.RIGHT),
-            MovingObject(700, 321, 128, 31, 1, self.BLOCK4_IMG, direction=Direction.RIGHT),
+            MovingObject(150, 321, 126, 31, 1, self.BLOCK4_IMG, direction=Direction.RIGHT),
+            MovingObject(450, 321, 126, 31, 1, self.BLOCK4_IMG, direction=Direction.RIGHT),
+            MovingObject(700, 321, 126, 31, 1, self.BLOCK4_IMG, direction=Direction.RIGHT),
         ]
         self.turtles = [
 

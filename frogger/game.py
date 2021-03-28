@@ -1,9 +1,7 @@
-import os.path
-
 import pygame
 
 from models import Frog, MovingObject, Direction, GameObject
-from utils import get_move_direction, detect_collision
+from utils import get_move_direction, detect_collision, get_img_path
 from timer import Timer
 from best_score import BestScore
 from score_counter import ScoreCounter
@@ -18,7 +16,7 @@ class Frogger:
         self.FPS = 60
         self.clock = pygame.time.Clock()
 
-        self.best_score_manager = BestScore('frogger.txt')
+        self.best_score_manager = BestScore('../frogger.txt')
         self.best_score = self.best_score_manager.get()
         self.score_counter = ScoreCounter()
         self.lives = lives
@@ -110,17 +108,17 @@ class Frogger:
         pygame.display.set_caption("Frogger Clone")
 
     def _load_images(self):
-        self.BACKGROUND = pygame.image.load(os.path.join("assets", "background.png"))
-        self.FROG_IMG = pygame.image.load(os.path.join("assets", "frog.png"))
-        self.CAR1_IMG = pygame.image.load(os.path.join("assets", "car1.png"))
-        self.CAR2_IMG = pygame.image.load(os.path.join("assets", "car2.png"))
-        self.CAR3_IMG = pygame.image.load(os.path.join("assets", "car3.png"))
-        self.CAR4_IMG = pygame.image.load(os.path.join("assets", "car4.png"))
-        self.CAR5_IMG = pygame.image.load(os.path.join("assets", "car5.png"))
-        self.BLOCK3_IMG = pygame.image.load(os.path.join("assets", "block3.png"))
-        self.BLOCK4_IMG = pygame.image.load(os.path.join("assets", "block4.png"))
-        self.BLOCK6_IMG = pygame.image.load(os.path.join("assets", "block6.png"))
-        self.TURTLE_IMG = pygame.image.load(os.path.join("assets", "turtle.png"))
+        self.BACKGROUND = pygame.image.load(get_img_path("background.png"))
+        self.FROG_IMG = pygame.image.load(get_img_path("frog.png"))
+        self.CAR1_IMG = pygame.image.load(get_img_path("car1.png"))
+        self.CAR2_IMG = pygame.image.load(get_img_path("car2.png"))
+        self.CAR3_IMG = pygame.image.load(get_img_path("car3.png"))
+        self.CAR4_IMG = pygame.image.load(get_img_path("car4.png"))
+        self.CAR5_IMG = pygame.image.load(get_img_path("car5.png"))
+        self.BLOCK3_IMG = pygame.image.load(get_img_path( "block3.png"))
+        self.BLOCK4_IMG = pygame.image.load(get_img_path("block4.png"))
+        self.BLOCK6_IMG = pygame.image.load(get_img_path("block6.png"))
+        self.TURTLE_IMG = pygame.image.load(get_img_path("turtle.png"))
 
     def run(self):
         while True:

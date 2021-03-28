@@ -1,3 +1,5 @@
+import os.path
+
 import pygame
 
 from models import Direction
@@ -18,3 +20,6 @@ def detect_collision(first, second):
     return first.rect.colliderect(second.rect)
 
 
+def get_img_path(img_name):
+    wd = os.path.dirname(__file__)
+    return os.path.join(wd, "..", "assets", img_name)

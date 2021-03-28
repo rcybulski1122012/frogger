@@ -12,4 +12,3 @@ class BestScore:
     def set(self, score):
         with open(self.path, 'w') as f:
             f.write(str(score))
-

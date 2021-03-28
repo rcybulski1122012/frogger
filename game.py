@@ -183,8 +183,13 @@ class Frogger:
 
         if detect_collision(self.frog, self.water_area) and colliding_object is None:
             self._lose_live()
-        elif colliding_object:
+        elif (colliding_object and
+              not self.is_beyond_the_surface_after_moving_object_move(colliding_object, self.SURFACE)):
             self.frog.move_by_value(colliding_object.direction, colliding_object.velocity)
+
+    def is_beyond_the_surface_after_moving_object_move(self, moving_object, surface):
+        return (self.frog.x + moving_object.velocity < 0
+                or self.frog.x + self.frog.width + moving_object.velocity > surface.get_width())
 
     def _process_frog_homes(self):
         colliding_object = None

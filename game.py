@@ -6,6 +6,7 @@ from models import Frog, MovingObject, Direction, GameObject
 from utils import get_move_direction, detect_collision
 from timer import Timer
 from best_score import BestScore
+from score_counter import ScoreCounter
 
 
 class Frogger:
@@ -19,7 +20,7 @@ class Frogger:
 
         self.best_score_manager = BestScore('frogger.txt')
         self.best_score = self.best_score_manager.get()
-        self.current_score = 0
+        self.score_counter = ScoreCounter()
         self.lives = lives
 
         self.timer = Timer(25, 25, 200, 25, (255, 0, 0), seconds_per_frog, self.FPS)
@@ -206,11 +207,8 @@ class Frogger:
             self._frog_in_home()
 
     def _frog_in_home(self):
-        # For safely arriving to the home
-        self.current_score += 100
-        # For unused time
-        self.current_score += int(self.timer.seconds * 2)
-
+        self.score_counter.add_points_for_arriving()
+        self.score_counter.add_points_for_unused_time(self.timer.seconds)
         self.frog.move_to_starting_position()
         self.timer.reset()
 
@@ -218,15 +216,13 @@ class Frogger:
         if self.lives < 0:
             self._end_game()
         elif len(self.frog_homes) == 0:
-            # For saving all frogs
-            self.current_score += 1000
-            # For preserved lives
-            self.current_score += self.lives * 100
+            self.score_counter.add_points_for_saving_all_frogs()
+            self.score_counter.add_points_for_preserved_lives(self.lives)
             self._end_game()
 
     def _end_game(self):
-        if self.current_score > self.best_score:
-            self.best_score_manager.set(self.current_score)
+        if self.score_counter.score > self.best_score:
+            self.best_score_manager.set(self.score_counter.score)
 
         pygame.quit()
 
@@ -259,7 +255,7 @@ class Frogger:
         return self.font.render(f'Lives: {self.lives}', False, (255, 255, 255))
 
     def _get_current_score_surface(self):
-        return self.font.render(f'Current score: {self.current_score}', False, (255, 255, 255))
+        return self.font.render(f'Current score: {self.score_counter.score}', False, (255, 255, 255))
 
 
 if __name__ == '__main__':

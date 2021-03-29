@@ -16,7 +16,7 @@ class Frogger:
         self.FPS = 60
         self.clock = pygame.time.Clock()
 
-        self.best_score_manager = BestScore('../frogger.txt')
+        self.best_score_manager = BestScore('frogger.txt')
         self.best_score = self.best_score_manager.get()
         self.score_counter = ScoreCounter()
         self.lives = lives
@@ -115,7 +115,7 @@ class Frogger:
         self.CAR3_IMG = pygame.image.load(get_img_path("car3.png"))
         self.CAR4_IMG = pygame.image.load(get_img_path("car4.png"))
         self.CAR5_IMG = pygame.image.load(get_img_path("car5.png"))
-        self.BLOCK3_IMG = pygame.image.load(get_img_path( "block3.png"))
+        self.BLOCK3_IMG = pygame.image.load(get_img_path("block3.png"))
         self.BLOCK4_IMG = pygame.image.load(get_img_path("block4.png"))
         self.BLOCK6_IMG = pygame.image.load(get_img_path("block6.png"))
         self.TURTLE_IMG = pygame.image.load(get_img_path("turtle.png"))
@@ -234,17 +234,19 @@ class Frogger:
         for obj in self._get_all_moving_objects():
             obj.draw(self.SURFACE)
 
+        for obj in self.frog_homes:
+            pygame.draw.rect(self.SURFACE, (24, 48, 172), obj.rect)
+
         self.timer.draw(self.SURFACE)
         self.frog.draw(self.SURFACE)
+        self._draw_game_info()
 
+        pygame.display.update()
+
+    def _draw_game_info(self):
         self.SURFACE.blit(self._get_best_score_surface(), (400, 25))
         self.SURFACE.blit(self._get_lives_number_surface(), (400, 60))
         self.SURFACE.blit(self._get_current_score_surface(), (25, 60))
-
-        for obj in self.frog_homes:
-            pygame.draw.rect(self.SURFACE, (255, 0, 0), obj.rect)
-
-        pygame.display.update()
 
     def _get_best_score_surface(self):
         return self.font.render(f'Best score: {self.best_score}', False, (255, 255, 255))

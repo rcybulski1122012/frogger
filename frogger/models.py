@@ -1,6 +1,6 @@
-import pygame
-
 from enum import Enum
+
+import pygame
 
 
 class Direction(Enum):
@@ -90,8 +90,12 @@ class MovingObject(GameObject):
         super().move(self.direction)
 
     def is_beyond_the_surface(self, surface):
-        if (self.direction == Direction.LEFT and self.x + self.width < 0 or
-                self.direction == Direction.RIGHT and self.x - self.width > surface.get_width()):
+        if (
+            self.direction == Direction.LEFT
+            and self.x + self.width < 0
+            or self.direction == Direction.RIGHT
+            and self.x - self.width > surface.get_width()
+        ):
             return True
 
         return False

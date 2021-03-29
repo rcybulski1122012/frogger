@@ -1,22 +1,21 @@
 import pygame
-
-from models import Frog, MovingObject, Direction, GameObject
-from utils import get_move_direction, detect_collision, get_img_path
-from timer import Timer
 from best_score import BestScore
+from models import Direction, Frog, GameObject, MovingObject
 from score_counter import ScoreCounter
+from timer import Timer
+from utils import detect_collision, get_img_path, get_move_direction
 
 
 class Frogger:
     def __init__(self, seconds_per_frog=30, lives=3):
         self._init_pygame()
         self._load_images()
-        self.font = pygame.font.SysFont('Comic Sans MS', 35)
+        self.font = pygame.font.SysFont("Comic Sans MS", 35)
         self.SURFACE = pygame.display.set_mode((640, 640))
         self.FPS = 60
         self.clock = pygame.time.Clock()
 
-        self.best_score_manager = BestScore('frogger.txt')
+        self.best_score_manager = BestScore("frogger.txt")
         self.best_score = self.best_score_manager.get()
         self.score_counter = ScoreCounter()
         self.lives = lives
@@ -27,23 +26,28 @@ class Frogger:
             MovingObject(150, 544, 32, 32, 1.2, self.CAR1_IMG),
             MovingObject(350, 544, 32, 32, 1.2, self.CAR1_IMG),
             MovingObject(550, 544, 32, 32, 1.2, self.CAR1_IMG),
-
-            MovingObject(550, 512, 32, 32, 0.8, self.CAR2_IMG, direction=Direction.RIGHT),
-            MovingObject(350, 512, 32, 32, 0.8, self.CAR2_IMG, direction=Direction.RIGHT),
-            MovingObject(150, 512, 32, 32, 0.8, self.CAR2_IMG, direction=Direction.RIGHT),
-
+            MovingObject(
+                550, 512, 32, 32, 0.8, self.CAR2_IMG, direction=Direction.RIGHT
+            ),
+            MovingObject(
+                350, 512, 32, 32, 0.8, self.CAR2_IMG, direction=Direction.RIGHT
+            ),
+            MovingObject(
+                150, 512, 32, 32, 0.8, self.CAR2_IMG, direction=Direction.RIGHT
+            ),
             MovingObject(200, 480, 32, 32, 1, self.CAR3_IMG),
             MovingObject(400, 480, 32, 32, 1, self.CAR3_IMG),
             MovingObject(600, 480, 32, 32, 1, self.CAR3_IMG),
-
-            MovingObject(450, 448, 32, 32, 0.9, self.CAR4_IMG, direction=Direction.RIGHT),
-            MovingObject(100, 448, 32, 32, 0.9, self.CAR4_IMG, direction=Direction.RIGHT),
-
+            MovingObject(
+                450, 448, 32, 32, 0.9, self.CAR4_IMG, direction=Direction.RIGHT
+            ),
+            MovingObject(
+                100, 448, 32, 32, 0.9, self.CAR4_IMG, direction=Direction.RIGHT
+            ),
             MovingObject(100, 416, 64, 32, 0.7, self.CAR5_IMG),
             MovingObject(250, 416, 64, 32, 0.7, self.CAR5_IMG),
             MovingObject(450, 416, 64, 32, 0.7, self.CAR5_IMG),
             MovingObject(600, 416, 64, 32, 0.7, self.CAR5_IMG),
-
             MovingObject(200, 384, 32, 32, 1.2, self.CAR1_IMG),
             MovingObject(400, 384, 32, 32, 1.2, self.CAR1_IMG),
             MovingObject(600, 384, 32, 32, 1.2, self.CAR1_IMG),
@@ -59,44 +63,58 @@ class Frogger:
             GameObject(544, 129, 33, 30, None, None),
         ]
         self.blocks = [
-            MovingObject(0, 161, 126, 31, 1, self.BLOCK4_IMG, direction=Direction.RIGHT),
-            MovingObject(215, 161, 126, 31, 1, self.BLOCK4_IMG, direction=Direction.RIGHT),
-            MovingObject(430, 161, 126, 31, 1, self.BLOCK4_IMG, direction=Direction.RIGHT),
-            MovingObject(655, 161, 126, 31, 1, self.BLOCK4_IMG, direction=Direction.RIGHT),
-
-            MovingObject(0, 225, 188, 31, 1.2, self.BLOCK6_IMG, direction=Direction.RIGHT),
-            MovingObject(400, 225, 188, 31, 1.2, self.BLOCK6_IMG, direction=Direction.RIGHT),
-
-            MovingObject(0, 257, 92, 31, 0.8, self.BLOCK3_IMG, direction=Direction.RIGHT),
-            MovingObject(350, 257, 92, 31, 0.8, self.BLOCK3_IMG, direction=Direction.RIGHT),
-            MovingObject(600, 257, 92, 31, 0.8, self.BLOCK3_IMG, direction=Direction.RIGHT),
-
-            MovingObject(150, 321, 126, 31, 1, self.BLOCK4_IMG, direction=Direction.RIGHT),
-            MovingObject(450, 321, 126, 31, 1, self.BLOCK4_IMG, direction=Direction.RIGHT),
-            MovingObject(700, 321, 126, 31, 1, self.BLOCK4_IMG, direction=Direction.RIGHT),
+            MovingObject(
+                0, 161, 126, 31, 1, self.BLOCK4_IMG, direction=Direction.RIGHT
+            ),
+            MovingObject(
+                215, 161, 126, 31, 1, self.BLOCK4_IMG, direction=Direction.RIGHT
+            ),
+            MovingObject(
+                430, 161, 126, 31, 1, self.BLOCK4_IMG, direction=Direction.RIGHT
+            ),
+            MovingObject(
+                655, 161, 126, 31, 1, self.BLOCK4_IMG, direction=Direction.RIGHT
+            ),
+            MovingObject(
+                0, 225, 188, 31, 1.2, self.BLOCK6_IMG, direction=Direction.RIGHT
+            ),
+            MovingObject(
+                400, 225, 188, 31, 1.2, self.BLOCK6_IMG, direction=Direction.RIGHT
+            ),
+            MovingObject(
+                0, 257, 92, 31, 0.8, self.BLOCK3_IMG, direction=Direction.RIGHT
+            ),
+            MovingObject(
+                350, 257, 92, 31, 0.8, self.BLOCK3_IMG, direction=Direction.RIGHT
+            ),
+            MovingObject(
+                600, 257, 92, 31, 0.8, self.BLOCK3_IMG, direction=Direction.RIGHT
+            ),
+            MovingObject(
+                150, 321, 126, 31, 1, self.BLOCK4_IMG, direction=Direction.RIGHT
+            ),
+            MovingObject(
+                450, 321, 126, 31, 1, self.BLOCK4_IMG, direction=Direction.RIGHT
+            ),
+            MovingObject(
+                700, 321, 126, 31, 1, self.BLOCK4_IMG, direction=Direction.RIGHT
+            ),
         ]
         self.turtles = [
-
             MovingObject(0, 193, 32, 31, 1.1, self.TURTLE_IMG),
             MovingObject(35, 193, 32, 31, 1.1, self.TURTLE_IMG),
-
             MovingObject(150, 193, 32, 31, 1.1, self.TURTLE_IMG),
             MovingObject(185, 193, 32, 31, 1.1, self.TURTLE_IMG),
-
             MovingObject(300, 193, 32, 31, 1.1, self.TURTLE_IMG),
             MovingObject(335, 193, 32, 31, 1.1, self.TURTLE_IMG),
-
             MovingObject(450, 193, 32, 31, 1.1, self.TURTLE_IMG),
             MovingObject(485, 193, 32, 31, 1.1, self.TURTLE_IMG),
-
             MovingObject(215, 289, 32, 31, 0.9, self.TURTLE_IMG),
             MovingObject(250, 289, 32, 31, 0.9, self.TURTLE_IMG),
             MovingObject(285, 289, 32, 31, 0.9, self.TURTLE_IMG),
-
             MovingObject(500, 289, 32, 31, 0.9, self.TURTLE_IMG),
             MovingObject(535, 289, 32, 31, 0.9, self.TURTLE_IMG),
             MovingObject(570, 289, 32, 31, 0.9, self.TURTLE_IMG),
-
             MovingObject(700, 289, 32, 31, 0.9, self.TURTLE_IMG),
             MovingObject(735, 289, 32, 31, 0.9, self.TURTLE_IMG),
             MovingObject(770, 289, 32, 31, 0.9, self.TURTLE_IMG),
@@ -182,13 +200,22 @@ class Frogger:
 
         if detect_collision(self.frog, self.water_area) and colliding_object is None:
             self._lose_live()
-        elif (colliding_object and
-              not self.is_beyond_the_surface_after_moving_object_move(colliding_object, self.SURFACE)):
-            self.frog.move_by_value(colliding_object.direction, colliding_object.velocity)
+        elif (
+            colliding_object
+            and not self.is_beyond_the_surface_after_moving_object_move(
+                colliding_object, self.SURFACE
+            )
+        ):
+            self.frog.move_by_value(
+                colliding_object.direction, colliding_object.velocity
+            )
 
     def is_beyond_the_surface_after_moving_object_move(self, moving_object, surface):
-        return (self.frog.x + moving_object.velocity < 0
-                or self.frog.x + self.frog.width + moving_object.velocity > surface.get_width())
+        return (
+            self.frog.x + moving_object.velocity < 0
+            or self.frog.x + self.frog.width + moving_object.velocity
+            > surface.get_width()
+        )
 
     def _process_frog_homes(self):
         colliding_object = None
@@ -249,15 +276,19 @@ class Frogger:
         self.SURFACE.blit(self._get_current_score_surface(), (25, 60))
 
     def _get_best_score_surface(self):
-        return self.font.render(f'Best score: {self.best_score}', False, (255, 255, 255))
+        return self.font.render(
+            f"Best score: {self.best_score}", False, (255, 255, 255)
+        )
 
     def _get_lives_number_surface(self):
-        return self.font.render(f'Lives: {self.lives}', False, (255, 255, 255))
+        return self.font.render(f"Lives: {self.lives}", False, (255, 255, 255))
 
     def _get_current_score_surface(self):
-        return self.font.render(f'Current score: {self.score_counter.score}', False, (255, 255, 255))
+        return self.font.render(
+            f"Current score: {self.score_counter.score}", False, (255, 255, 255)
+        )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     game = Frogger()
     game.run()

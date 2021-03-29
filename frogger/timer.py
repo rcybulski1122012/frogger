@@ -19,8 +19,11 @@ class Timer:
             self.seconds -= self._second_per_tick
 
     def draw(self, surface):
-        pygame.draw.rect(surface, self.color,
-                         pygame.Rect(self.x, self.y, self._px_per_sec * self.seconds, self.height))
+        pygame.draw.rect(
+            surface,
+            self.color,
+            pygame.Rect(self.x, self.y, self._px_per_sec * self.seconds, self.height),
+        )
 
     def reset(self):
         self.seconds = self.timer_value

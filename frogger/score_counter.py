@@ -1,6 +1,11 @@
 class ScoreCounter:
-    def __init__(self, for_arriving=100, for_unused_time=2,
-                 for_all_frogs=1000, for_preserved_lives=100):
+    def __init__(
+        self,
+        for_arriving=100,
+        for_unused_time=2,
+        for_all_frogs=1000,
+        for_preserved_lives=100,
+    ):
         self.score = 0
         self.for_arriving = for_arriving
         self.for_unused_time = for_unused_time

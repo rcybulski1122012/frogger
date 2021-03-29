@@ -1,7 +1,6 @@
 import os.path
 
 import pygame
-
 from models import Direction
 
 

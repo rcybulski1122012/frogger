@@ -19,7 +19,6 @@ class BasicGameObject:
     width: int
     height: int
 
-
     @property
     def rect(self):
         return pygame.Rect(self.x, self.y, self.width, self.height)

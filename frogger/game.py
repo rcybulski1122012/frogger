@@ -1,10 +1,11 @@
 import pygame
-from best_score import BestScore
-from models import Direction, Frog, GameObject, MovingObject
-from score_counter import ScoreCounter
-from timer import Timer
-from utils import detect_collision, get_img_path, get_move_direction
-from button import Button
+
+from frogger.best_score import BestScore
+from frogger.button import Button
+from frogger.models import Direction, Frog, GameObject, MovingObject
+from frogger.score_counter import ScoreCounter
+from frogger.timer import Timer
+from frogger.utils import detect_collision, get_img_path, get_move_direction
 
 
 class Frogger:
@@ -23,10 +24,14 @@ class Frogger:
         self.starting_lives = lives
         self.lives = lives
 
-        self.reset_game_button = Button(250, 300, 60, 30, ' YES', self.font, (0, 255, 0))
-        self.quit_game_button = Button(350, 300, 60, 30, '  NO', self.font, (255, 0, 0))
+        self.reset_game_button = Button(
+            250, 300, 60, 30, " YES", self.font, (0, 255, 0)
+        )
+        self.quit_game_button = Button(350, 300, 60, 30, "  NO", self.font, (255, 0, 0))
         self.choice_area = GameObject(210, 100, 240, 250, None, None)
-        self.reset_or_quit_text = self.font.render('RESET GAME?', False, (255, 255, 255))
+        self.reset_or_quit_text = self.font.render(
+            "RESET GAME?", False, (255, 255, 255)
+        )
 
         self.seconds_per_frog = seconds_per_frog
         self.timer = Timer(25, 25, 200, 25, (255, 0, 0), seconds_per_frog, self.FPS)

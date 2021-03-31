@@ -1,6 +1,6 @@
 import pygame
 
-from models import BasicGameObject
+from frogger.models import BasicGameObject
 
 
 class Timer(BasicGameObject):

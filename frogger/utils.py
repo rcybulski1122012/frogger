@@ -1,7 +1,8 @@
 import os.path
 
 import pygame
-from models import Direction
+
+from frogger.models import Direction
 
 
 def get_move_direction(keys):

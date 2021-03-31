@@ -1,10 +1,12 @@
 import pygame
 
-from models import BasicGameObject
+from frogger.models import BasicGameObject
 
 
 class Button(BasicGameObject):
-    def __init__(self, x, y, width, height, text, font, bg_color=(0, 0, 0), color=(255, 255, 255)):
+    def __init__(
+        self, x, y, width, height, text, font, bg_color=(0, 0, 0), color=(255, 255, 255)
+    ):
         super().__init__(x, y, width, height)
         self.bg_color = bg_color
         self.color = color

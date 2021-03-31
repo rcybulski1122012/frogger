@@ -1,4 +1,6 @@
+from dataclasses import dataclass
 from enum import Enum
+from typing import Union
 
 import pygame
 
@@ -10,14 +12,19 @@ class Direction(Enum):
     DOWN = 4
 
 
-class GameObject:
+@dataclass
+class BasicGameObject:
+    x: Union[int, float]
+    y: Union[int, float]
+    width: int
+    height: int
+
+
+class GameObject(BasicGameObject):
     def __init__(self, x, y, width, height, velocity, sprite):
+        super().__init__(x, y, width, height)
         self.starting_x = x
         self.starting_y = y
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
         self.velocity = velocity
         self.sprite = sprite
 
@@ -56,8 +63,8 @@ class GameObject:
 
 
 class Frog(GameObject):
-    def __init__(self, *args, jump_frequency=15, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, x, y, width, height, velocity, sprite, jump_frequency=15):
+        super().__init__(x, y, width, height, velocity, sprite)
         self._jump_delay = 0
         self._jump_frequency = jump_frequency
 
@@ -82,8 +89,8 @@ class Frog(GameObject):
 
 
 class MovingObject(GameObject):
-    def __init__(self, *args, direction=Direction.LEFT, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, x, y, width, height, velocity, sprite, direction=Direction.LEFT):
+        super().__init__(x, y, width, height, velocity, sprite)
         self.direction = direction
 
     def move(self, *args):

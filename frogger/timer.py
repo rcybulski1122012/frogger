@@ -1,14 +1,12 @@
 import pygame
 
+from models import BasicGameObject
 
-class Timer:
+
+class Timer(BasicGameObject):
     def __init__(self, x, y, width, height, color, seconds, fps):
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
+        super().__init__(x, y, width, height)
         self.color = color
-
         self.timer_value = seconds
         self.seconds = seconds
         self._px_per_sec = width / seconds

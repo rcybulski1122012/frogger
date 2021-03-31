@@ -20,6 +20,11 @@ class BasicGameObject:
     height: int
 
 
+    @property
+    def rect(self):
+        return pygame.Rect(self.x, self.y, self.width, self.height)
+
+
 class GameObject(BasicGameObject):
     def __init__(self, x, y, width, height, velocity, sprite):
         super().__init__(x, y, width, height)
@@ -56,10 +61,6 @@ class GameObject(BasicGameObject):
             self.y -= value
         elif direction == Direction.DOWN:
             self.y += value
-
-    @property
-    def rect(self):
-        return pygame.Rect(self.x, self.y, self.width, self.height)
 
 
 class Frog(GameObject):

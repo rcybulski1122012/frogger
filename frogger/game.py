@@ -4,12 +4,14 @@ from models import Direction, Frog, GameObject, MovingObject
 from score_counter import ScoreCounter
 from timer import Timer
 from utils import detect_collision, get_img_path, get_move_direction
+from button import Button
 
 
 class Frogger:
     def __init__(self, seconds_per_frog=30, lives=3):
         self._init_pygame()
         self._load_images()
+
         self.font = pygame.font.SysFont("Comic Sans MS", 35)
         self.SURFACE = pygame.display.set_mode((640, 640))
         self.FPS = 60
@@ -18,10 +20,38 @@ class Frogger:
         self.best_score_manager = BestScore("frogger.txt")
         self.best_score = self.best_score_manager.get()
         self.score_counter = ScoreCounter()
+        self.starting_lives = lives
         self.lives = lives
 
+        self.reset_game_button = Button(250, 300, 60, 30, ' YES', self.font, (0, 255, 0))
+        self.quit_game_button = Button(350, 300, 60, 30, '  NO', self.font, (255, 0, 0))
+        self.choice_area = GameObject(210, 100, 240, 250, None, None)
+        self.reset_or_quit_text = self.font.render('RESET GAME?', False, (255, 255, 255))
+
+        self.seconds_per_frog = seconds_per_frog
         self.timer = Timer(25, 25, 200, 25, (255, 0, 0), seconds_per_frog, self.FPS)
         self.frog = Frog(320, 576, 32, 32, 32, self.FROG_IMG)
+        self._init_game_objects()
+
+    @staticmethod
+    def _init_pygame():
+        pygame.init()
+        pygame.display.set_caption("Frogger Clone")
+
+    def _load_images(self):
+        self.BACKGROUND = pygame.image.load(get_img_path("background.png"))
+        self.FROG_IMG = pygame.image.load(get_img_path("frog.png"))
+        self.CAR1_IMG = pygame.image.load(get_img_path("car1.png"))
+        self.CAR2_IMG = pygame.image.load(get_img_path("car2.png"))
+        self.CAR3_IMG = pygame.image.load(get_img_path("car3.png"))
+        self.CAR4_IMG = pygame.image.load(get_img_path("car4.png"))
+        self.CAR5_IMG = pygame.image.load(get_img_path("car5.png"))
+        self.BLOCK3_IMG = pygame.image.load(get_img_path("block3.png"))
+        self.BLOCK4_IMG = pygame.image.load(get_img_path("block4.png"))
+        self.BLOCK6_IMG = pygame.image.load(get_img_path("block6.png"))
+        self.TURTLE_IMG = pygame.image.load(get_img_path("turtle.png"))
+
+    def _init_game_objects(self):
         self.cars = [
             MovingObject(150, 544, 32, 32, 1.2, self.CAR1_IMG),
             MovingObject(350, 544, 32, 32, 1.2, self.CAR1_IMG),
@@ -119,24 +149,6 @@ class Frogger:
             MovingObject(735, 289, 32, 31, 0.9, self.TURTLE_IMG),
             MovingObject(770, 289, 32, 31, 0.9, self.TURTLE_IMG),
         ]
-
-    @staticmethod
-    def _init_pygame():
-        pygame.init()
-        pygame.display.set_caption("Frogger Clone")
-
-    def _load_images(self):
-        self.BACKGROUND = pygame.image.load(get_img_path("background.png"))
-        self.FROG_IMG = pygame.image.load(get_img_path("frog.png"))
-        self.CAR1_IMG = pygame.image.load(get_img_path("car1.png"))
-        self.CAR2_IMG = pygame.image.load(get_img_path("car2.png"))
-        self.CAR3_IMG = pygame.image.load(get_img_path("car3.png"))
-        self.CAR4_IMG = pygame.image.load(get_img_path("car4.png"))
-        self.CAR5_IMG = pygame.image.load(get_img_path("car5.png"))
-        self.BLOCK3_IMG = pygame.image.load(get_img_path("block3.png"))
-        self.BLOCK4_IMG = pygame.image.load(get_img_path("block4.png"))
-        self.BLOCK6_IMG = pygame.image.load(get_img_path("block6.png"))
-        self.TURTLE_IMG = pygame.image.load(get_img_path("turtle.png"))
 
     def run(self):
         while True:
@@ -249,7 +261,33 @@ class Frogger:
         if self.score_counter.score > self.best_score:
             self.best_score_manager.set(self.score_counter.score)
 
-        pygame.quit()
+        self._reset_or_quit_game()
+
+    def _reset_or_quit_game(self):
+        self._draw_reset_or_quit_buttons()
+
+        running = True
+        while running:
+            mouse_pos = pygame.mouse.get_pos()
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if self.reset_game_button.is_mouse_over(mouse_pos):
+                        self._reset_game()
+                        running = False
+                    elif self.quit_game_button.is_mouse_over(mouse_pos):
+                        pygame.quit()
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+
+    def _draw_reset_or_quit_buttons(self):
+        pygame.draw.rect(self.SURFACE, (0, 0, 0), self.choice_area.rect)
+        self.reset_game_button.draw(self.SURFACE)
+        self.quit_game_button.draw(self.SURFACE)
+        self.SURFACE.blit(self.reset_or_quit_text, (240, 150))
+        pygame.display.update()
+
+    def _reset_game(self):
+        self.__init__(self.seconds_per_frog, self.starting_lives)
 
     def _handle_end_of_time(self):
         if self.timer.end_of_time():
@@ -266,6 +304,7 @@ class Frogger:
 
         self.timer.draw(self.SURFACE)
         self.frog.draw(self.SURFACE)
+
         self._draw_game_info()
 
         pygame.display.update()
@@ -290,5 +329,5 @@ class Frogger:
 
 
 if __name__ == "__main__":
-    game = Frogger()
+    game = Frogger(lives=3)
     game.run()

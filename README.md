@@ -2,7 +2,7 @@
 
 Simplified frogger clone made with Python and pygame.
 
-### Differences for the original
+### Differences from the original
 * Lack of alligators, snakes, otters, female frog on a log.
 * Turtles do not submerge
 * Lack of animations

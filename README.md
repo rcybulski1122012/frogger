@@ -7,7 +7,7 @@ Simplified frogger clone made with Python and pygame.
 * Turtles do not submerge
 * Lack of animations
 * More frog homes
-* Different manne of counting score.
+* Different manner of counting score.
 
 ## Setup
 1. Clone the repository
